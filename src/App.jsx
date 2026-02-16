@@ -30,7 +30,7 @@ const App = () => {
           {
             parts: [
               {
-                text: `Translate this into ${form.lang}: ${form.text}`,
+                text: ` ${form.lang}: ${form.text}`,
               },
             ],
           },
