@@ -1,4 +1,4 @@
-import { Languages, Copy, ArrowUpAZ, LoaderCircle } from "lucide-react";
+import { Languages, Copy, LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
@@ -11,16 +11,18 @@ const App = () => {
     text: "",
     lang: "",
   });
+
   const [result, setResult] = useState("");
 
   const translateNow = async (e) => {
     e.preventDefault();
-    setLoading(true);
 
     if (!form.lang || form.lang === "Chose Language") {
       toast.error("Please select a language!");
       return;
     }
+
+    setLoading(true);
 
     try {
       const payload = {
@@ -28,7 +30,7 @@ const App = () => {
           {
             parts: [
               {
-                text: ` ${form.lang}- ${form.text}`,
+                text: `Translate this into ${form.lang}: ${form.text}`,
               },
             ],
           },
@@ -49,6 +51,7 @@ const App = () => {
       setLoading(false);
     }
   };
+
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(result);
@@ -64,65 +67,86 @@ const App = () => {
   };
 
   const handleChange = (e) => {
-    const input = e.target;
-    const name = input.name;
-    const value = input.value;
+    const { name, value } = e.target;
     setForm({
       ...form,
       [name]: value,
     });
   };
+
   return (
-    <div className="bg-slate-900 min-h-screen py-16">
-      <div className="w-10/12 grid grid-cols-2 gap-12 mx-auto">
-        <div className="p-8 bg-slate-800 border border-slate-700 border-2 rounded-xl">
-          <h1 className="text-4xl font-bold text-amber-500 mb-6">Translator</h1>
-          <form className="space-y-6" onSubmit={translateNow}>
+    <div className="bg-slate-900 min-h-screen py-8 sm:py-12 lg:py-16 px-4">
+      
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12">
+        
+        {/* Left Card */}
+        <div className="p-5 sm:p-6 lg:p-8 bg-slate-800 border border-slate-700 rounded-2xl shadow-lg">
+          
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-500 mb-6">
+            Translator
+          </h1>
+
+          <form className="space-y-5" onSubmit={translateNow}>
+            
             <textarea
               name="text"
-              placeholder="Enter your write here"
+              placeholder="Enter your text here..."
               value={form.text}
               onChange={handleChange}
               required
-              className="p-3 text-white bg-slate-900 w-full rounded-xl focus:outline-none focus:border focus:border-amber-700 placeholder-amber-100"
-            ></textarea>
+              className="p-3 text-white bg-slate-900 w-full rounded-xl min-h-[140px] sm:min-h-[180px] focus:outline-none focus:border focus:border-amber-700 placeholder-amber-100"
+            />
+
             <select
               name="lang"
               onChange={handleChange}
-              className="p-3 text-white bg-slate-900 w-full rounded-xl focus:outline-none focus:border focus:border-amber-700 placeholder-amber-100"
+              className="p-3 text-white bg-slate-900 w-full rounded-xl focus:outline-none focus:border focus:border-amber-700"
             >
-              <option value="Chose Language">Chose language</option>
-              <option value="hindi">Hindi</option>
-              <option value="english">English</option>
-              <option value="spenish">Spenish</option>
-              <option value="bhojpuri">Bhojpuri</option>
-              <option value="sanskrit">Sanskrit</option>
+              <option value="">Choose language</option>
+              <option value="Hindi">Hindi</option>
+              <option value="English">English</option>
+              <option value="Spanish">Spanish</option>
+              <option value="Bhojpuri">Bhojpuri</option>
+              <option value="Sanskrit">Sanskrit</option>
             </select>
+
             {loading ? (
               <button
                 disabled
-                className="bg-gray-300 rounded-lg text-white py-3 px-3 flex items-center gap-1 font-medium focus:scale-90 duration-100"
+                className="w-full bg-gray-400 rounded-lg text-white py-3 flex items-center justify-center gap-2 font-medium"
               >
-                <LoaderCircle className="animate-spin" />
-                Loading...
+                <LoaderCircle className="animate-spin" size={18} />
+                Translating...
               </button>
             ) : (
-              <button className="bg-amber-500 rounded-lg text-white py-3 px-3 flex items-center gap-1 font-medium focus:scale-90 duration-100">
-                <Languages />
+              <button
+                type="submit"
+                className="w-full bg-amber-500 hover:bg-amber-600 rounded-lg text-white py-3 flex items-center justify-center gap-2 font-medium transition duration-200"
+              >
+                <Languages size={18} />
                 Translate
               </button>
             )}
           </form>
         </div>
-        <div className="relative p-8 bg-slate-800 border border-slate-700 border-2 rounded-xl">
-          <p className="mt-5 text-white/80">{result}</p>
-          <Copy
-            className="absolute top-5 right-5 text-amber-500 cursor-pointer hover:scale-110 duration-300"
-            onClick={copy}
-          />
+
+        {/* Right Card */}
+        <div className="relative p-5 sm:p-6 lg:p-8 bg-slate-800 border border-slate-700 rounded-2xl shadow-lg min-h-[200px]">
+          
+          <p className="text-white/80 whitespace-pre-wrap break-words">
+            {result || "Your translation will appear here..."}
+          </p>
+
+          {result && (
+            <Copy
+              className="absolute top-4 right-4 text-amber-500 cursor-pointer hover:scale-110 transition"
+              onClick={copy}
+            />
+          )}
         </div>
       </div>
-      <ToastContainer />
+
+      <ToastContainer position="top-right" />
     </div>
   );
 };
