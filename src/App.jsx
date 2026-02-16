@@ -80,7 +80,7 @@ const App = () => {
           <form className="space-y-6" onSubmit={translateNow}>
             <textarea
               name="text"
-              placeholder="Enter your text here...."
+              placeholder="Enter your write here"
               value={form.text}
               onChange={handleChange}
               required
