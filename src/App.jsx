@@ -7,6 +7,8 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const API_URL = import.meta.env.VITE_API_KEY;
 
+  console.log(API_URL);
+
   const [form, setForm] = useState({
     text: "",
     lang: "",
@@ -45,7 +47,7 @@ const App = () => {
       const answer = data.candidates[0].content.parts[0].text;
       setResult(answer);
     } catch (error) {
-      console.log(error);
+      console.log(error.response?.data);
       toast.error("Error in translation!");
     } finally {
       setLoading(false);
@@ -76,18 +78,14 @@ const App = () => {
 
   return (
     <div className="bg-slate-900 min-h-screen py-8 sm:py-12 lg:py-16 px-4">
-      
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12">
-        
         {/* Left Card */}
         <div className="p-5 sm:p-6 lg:p-8 bg-slate-800 border border-slate-700 rounded-2xl shadow-lg">
-          
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-500 mb-6">
             Translator
           </h1>
 
           <form className="space-y-5" onSubmit={translateNow}>
-            
             <textarea
               name="text"
               placeholder="Enter your text here..."
@@ -132,7 +130,6 @@ const App = () => {
 
         {/* Right Card */}
         <div className="relative p-5 sm:p-6 lg:p-8 bg-slate-800 border border-slate-700 rounded-2xl shadow-lg min-h-[200px]">
-          
           <p className="text-white/80 whitespace-pre-wrap break-words">
             {result || "Your translation will appear here..."}
           </p>
